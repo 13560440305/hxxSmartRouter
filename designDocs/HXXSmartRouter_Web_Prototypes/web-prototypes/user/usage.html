@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>用量与账单 · HXX SmartRouter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50:'#eef6ff',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8' },
+            ink: { 50:'#f8fafc',100:'#f1f5f9',200:'#e2e8f0',400:'#94a3b8',500:'#64748b',600:'#475569',700:'#334155',800:'#1e293b',900:'#0f172a' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: Inter, system-ui, sans-serif; }
+    .nav-active { background: #eff6ff; color: #1d4ed8; border-left: 3px solid #2563eb; }
+    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; }
+    .btn-ghost { border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.4rem 0.85rem; color: #334155; font-size: 13px; }
+    .badge { font-size: 11px; padding: 2px 8px; border-radius: 999px; font-weight: 500; }
+    .badge-slate { background: #f1f5f9; color: #475569; }
+    .badge-amber { background: #fef3c7; color: #92400e; }
+  </style>
+</head>
+<body class="bg-ink-50 text-ink-800 min-h-screen">
+  <div class="flex min-h-screen">
+    <aside class="w-60 bg-white border-r border-ink-200 flex flex-col shrink-0">
+      <div class="h-14 px-5 flex items-center gap-2 border-b border-ink-100">
+        <div class="w-8 h-8 rounded-lg bg-brand-600 text-white flex items-center justify-center text-sm font-bold">SR</div>
+        <div>
+          <div class="text-sm font-semibold text-ink-900">SmartRouter</div>
+          <div class="text-[11px] text-ink-400"><span data-i18n="app.userConsole">用户控制台</span></div>
+        </div>
+      </div>
+      <nav class="flex-1 py-3 text-sm">
+        <a href="index.html" class="flex items-center gap-2 px-4 py-2.5 mx-2 rounded-md text-ink-600 hover:bg-ink-50"><span data-i18n="user.nav.overview">概览</span></a>
+        <a href="api-keys.html" class="flex items-center gap-2 px-4 py-2.5 mx-2 rounded-md text-ink-600 hover:bg-ink-50"><span data-i18n="user.nav.keys">API 密钥</span></a>
+        <a href="usage.html" class="nav-active flex items-center gap-2 px-4 py-2.5 mx-2 rounded-r-md"><span data-i18n="user.nav.usage">用量与账单</span></a>
+        <a href="models.html" class="flex items-center gap-2 px-4 py-2.5 mx-2 rounded-md text-ink-600 hover:bg-ink-50"><span data-i18n="user.nav.models">可用模型</span></a>
+        <a href="docs.html" class="flex items-center gap-2 px-4 py-2.5 mx-2 rounded-md text-ink-600 hover:bg-ink-50"><span data-i18n="user.nav.docs">接入文档</span></a>
+      </nav>
+      <div class="p-4 border-t border-ink-100 text-xs text-ink-500">
+        <div class="font-medium text-ink-700">demo@company.com</div>
+        <div class="mt-0.5">租户 · ACME 科技</div>
+      </div>
+    </aside>
+
+    <main class="flex-1 overflow-auto">
+      <header class="h-14 bg-white border-b border-ink-200 px-8 flex items-center justify-between sticky top-0 z-10">
+        <h1 class="text-base font-semibold text-ink-900" data-i18n="user.usage.title">用量与账单</h1>
+        <div class="flex gap-2 items-center">
+
+          <label class="inline-flex items-center gap-1.5 text-xs text-ink-500">
+            <span data-i18n="lang.label">语言</span>
+            <select id="lang-select" class="min-w-[9.5rem] border border-ink-200 rounded-lg px-2.5 py-1.5 text-xs text-ink-800 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500" aria-label="Language"></select>
+          </label>
+          <select class="btn-ghost bg-white">
+            <option>最近 7 天</option>
+            <option>最近 30 天</option>
+            <option>本月</option>
+          </select>
+          <button class="btn-ghost" data-i18n="action.export">导出 CSV</button>
+        </div>
+      </header>
+
+      <div class="p-8 max-w-6xl">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div class="card p-5">
+            <div class="text-xs text-ink-500 mb-1">本期消费</div>
+            <div class="text-2xl font-semibold">¥ 328.60</div>
+          </div>
+          <div class="card p-5">
+            <div class="text-xs text-ink-500 mb-1">总 Token</div>
+            <div class="text-2xl font-semibold">4.2M</div>
+          </div>
+          <div class="card p-5">
+            <div class="text-xs text-ink-500 mb-1">账户余额</div>
+            <div class="text-2xl font-semibold">¥ 1,286.40</div>
+            <button class="mt-2 text-xs text-brand-600 hover:underline">申请充值 / 联系管理员</button>
+          </div>
+        </div>
+
+        <div class="card overflow-hidden">
+          <div class="px-5 py-3 border-b border-ink-100 flex flex-wrap gap-2 items-center">
+            <input type="search" placeholder="搜索 request_id / 模型…" class="border border-ink-200 rounded-lg px-3 py-1.5 text-sm w-56" />
+            <select class="btn-ghost bg-white text-sm">
+              <option>全部任务类型</option>
+              <option>rag_answer</option>
+              <option>document_reasoning</option>
+              <option>general_chat</option>
+            </select>
+            <select class="btn-ghost bg-white text-sm">
+              <option>全部调用模式</option>
+              <option>智能路由</option>
+              <option>指定模型</option>
+            </select>
+          </div>
+          <table class="w-full text-sm">
+            <thead class="bg-ink-50 text-ink-500 text-xs">
+              <tr>
+                <th class="text-left font-medium px-5 py-2.5">时间</th>
+                <th class="text-left font-medium px-3 py-2.5">Request ID</th>
+                <th class="text-left font-medium px-3 py-2.5">模型</th>
+                <th class="text-left font-medium px-3 py-2.5">任务</th>
+                <th class="text-right font-medium px-3 py-2.5">Input</th>
+                <th class="text-right font-medium px-3 py-2.5">Output</th>
+                <th class="text-right font-medium px-5 py-2.5">费用</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-ink-100">
+              <tr class="hover:bg-ink-50/80">
+                <td class="px-5 py-3 text-xs text-ink-500">10-20 10:42</td>
+                <td class="px-3 py-3"><code class="text-xs">sr_01J8…a2</code></td>
+                <td class="px-3 py-3">gpt-4o-mini <span class="badge badge-slate ml-1">auto</span></td>
+                <td class="px-3 py-3 text-xs">rag_answer</td>
+                <td class="px-3 py-3 text-right tabular-nums">2,100</td>
+                <td class="px-3 py-3 text-right tabular-nums">1,140</td>
+                <td class="px-5 py-3 text-right">¥0.012</td>
+              </tr>
+              <tr class="hover:bg-ink-50/80">
+                <td class="px-5 py-3 text-xs text-ink-500">10-20 10:38</td>
+                <td class="px-3 py-3"><code class="text-xs">sr_01J8…b9</code></td>
+                <td class="px-3 py-3">gpt-4o <span class="badge badge-amber ml-1">指定</span></td>
+                <td class="px-3 py-3 text-xs">document_reasoning</td>
+                <td class="px-3 py-3 text-right tabular-nums">14,200</td>
+                <td class="px-3 py-3 text-right tabular-nums">4,000</td>
+                <td class="px-5 py-3 text-right">¥0.186</td>
+              </tr>
+              <tr class="hover:bg-ink-50/80">
+                <td class="px-5 py-3 text-xs text-ink-500">10-20 09:15</td>
+                <td class="px-3 py-3"><code class="text-xs">sr_01J8…c1</code></td>
+                <td class="px-3 py-3">text-embedding-3 <span class="badge badge-slate ml-1">auto</span></td>
+                <td class="px-3 py-3 text-xs">embedding</td>
+                <td class="px-3 py-3 text-right tabular-nums">8,000</td>
+                <td class="px-3 py-3 text-right tabular-nums">—</td>
+                <td class="px-5 py-3 text-right">¥0.008</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="px-5 py-3 border-t border-ink-100 flex justify-between items-center text-xs text-ink-500">
+            <span>共 1,284 条</span>
+            <div class="flex gap-1">
+              <button class="btn-ghost py-1">上一页</button>
+              <button class="btn-ghost py-1 bg-ink-50">1</button>
+              <button class="btn-ghost py-1">2</button>
+              <button class="btn-ghost py-1">下一页</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="../assets/i18n.js"></script>
+</body>
+</html>

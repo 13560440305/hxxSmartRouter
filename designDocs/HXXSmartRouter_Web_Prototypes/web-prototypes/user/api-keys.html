@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>API 密钥 · HXX SmartRouter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50:'#eef6ff',100:'#d9ebff',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8' },
+            ink: { 50:'#f8fafc',100:'#f1f5f9',200:'#e2e8f0',400:'#94a3b8',500:'#64748b',600:'#475569',700:'#334155',800:'#1e293b',900:'#0f172a' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: Inter, system-ui, sans-serif; }
+    .nav-active { background: #eff6ff; color: #1d4ed8; border-left: 3px solid #2563eb; }
+    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; }
+    .btn-primary { background: #2563eb; color: #fff; border-radius: 8px; padding: 0.5rem 1rem; font-weight: 500; }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-ghost { border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.5rem 1rem; color: #334155; }
+    .btn-danger { border: 1px solid #fecaca; color: #b91c1c; border-radius: 8px; padding: 0.35rem 0.75rem; font-size: 12px; }
+    .btn-danger:hover { background: #fef2f2; }
+    .badge { font-size: 11px; padding: 2px 8px; border-radius: 999px; font-weight: 500; }
+    .badge-green { background: #dcfce7; color: #166534; }
+    .badge-slate { background: #f1f5f9; color: #475569; }
+    .modal-bg { background: rgba(15,23,42,.45); }
+  </style>
+</head>
+<body class="bg-ink-50 text-ink-800 min-h-screen">
+  <div class="flex min-h-screen">
+    <aside class="w-60 bg-white border-r border-ink-200 flex flex-col shrink-0">
+      <div class="h-14 px-5 flex items-center gap-2 border-b border-ink-100">
+        <div class="w-8 h-8 rounded-lg bg-brand-600 text-white flex items-center justify-center text-sm font-bold">SR</div>
+        <div>
+          <div class="text-sm font-semibold text-ink-900">SmartRouter</div>
+          <div class="text-[11px] text-ink-400"><span data-i18n="app.userConsole">用户控制台</span></div>
+        </div>
+      </div>
+      <nav class="flex-1 py-3 text-sm">
+        <a href="index.html" class="flex items-center gap-2 px-4 py-2.5 mx-2 rounded-md text-ink-600 hover:bg-ink-50"><span data-i18n="user.nav.overview">概览</span></a>
+        <a href="api-keys.html" class="nav-active flex items-center gap-2 px-4 py-2.5 mx-2 rounded-r-md"><span data-i18n="user.nav.keys">API 密钥</span></a>
+        <a href="usage.html" class="flex items-center gap-2 px-4 py-2.5 mx-2 rounded-md text-ink-600 hover:bg-ink-50"><span data-i18n="user.nav.usage">用量与账单</span></a>
+        <a href="models.html" class="flex items-center gap-2 px-4 py-2.5 mx-2 rounded-md text-ink-600 hover:bg-ink-50"><span data-i18n="user.nav.models">可用模型</span></a>
+        <a href="docs.html" class="flex items-center gap-2 px-4 py-2.5 mx-2 rounded-md text-ink-600 hover:bg-ink-50"><span data-i18n="user.nav.docs">接入文档</span></a>
+      </nav>
+      <div class="p-4 border-t border-ink-100 text-xs text-ink-500">
+        <div class="font-medium text-ink-700">demo@company.com</div>
+        <div class="mt-0.5">租户 · ACME 科技</div>
+      </div>
+    </aside>
+
+    <main class="flex-1 overflow-auto">
+      <header class="h-14 bg-white border-b border-ink-200 px-8 flex items-center justify-between sticky top-0 z-10">
+        <h1 class="text-base font-semibold text-ink-900" data-i18n="user.keys.title">API 密钥</h1>
+        
+          <label class="inline-flex items-center gap-1.5 text-xs text-ink-500">
+            <span data-i18n="lang.label">语言</span>
+            <select id="lang-select" class="min-w-[9.5rem] border border-ink-200 rounded-lg px-2.5 py-1.5 text-xs text-ink-800 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500" aria-label="Language"></select>
+          </label>
+        <button onclick="document.getElementById('modal').classList.remove('hidden')" class="btn-primary text-sm" data-i18n="user.keys.create">+ 创建密钥</button>
+      </header>
+
+      <div class="p-8 max-w-5xl">
+        <p class="text-sm text-ink-500 mb-6">密钥用于调用 SmartRouter API。请妥善保管，创建后仅展示一次完整 Key。</p>
+
+        <div class="card overflow-hidden">
+          <table class="w-full text-sm">
+            <thead class="bg-ink-50 text-ink-500 text-xs">
+              <tr>
+                <th class="text-left font-medium px-5 py-3">名称</th>
+                <th class="text-left font-medium px-3 py-3">密钥预览</th>
+                <th class="text-left font-medium px-3 py-3">权限范围</th>
+                <th class="text-left font-medium px-3 py-3">状态</th>
+                <th class="text-left font-medium px-3 py-3">最近使用</th>
+                <th class="text-left font-medium px-3 py-3">创建时间</th>
+                <th class="text-right font-medium px-5 py-3">操作</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-ink-100">
+              <tr>
+                <td class="px-5 py-3.5 font-medium text-ink-800">生产环境</td>
+                <td class="px-3 py-3.5"><code class="text-xs text-ink-600">hxx_sk_••••••••7a2f</code></td>
+                <td class="px-3 py-3.5"><span class="badge badge-slate">全量路由</span></td>
+                <td class="px-3 py-3.5"><span class="badge badge-green">启用</span></td>
+                <td class="px-3 py-3.5 text-xs text-ink-500">2 分钟前</td>
+                <td class="px-3 py-3.5 text-xs text-ink-500">2026-09-12</td>
+                <td class="px-5 py-3.5 text-right space-x-2">
+                  <button class="btn-ghost text-xs py-1 px-2">禁用</button>
+                  <button class="btn-danger">吊销</button>
+                </td>
+              </tr>
+              <tr>
+                <td class="px-5 py-3.5 font-medium text-ink-800">DocQA 联调</td>
+                <td class="px-3 py-3.5"><code class="text-xs text-ink-600">hxx_sk_••••••••9c1e</code></td>
+                <td class="px-3 py-3.5"><span class="badge badge-slate">仅虚拟模型</span></td>
+                <td class="px-3 py-3.5"><span class="badge badge-green">启用</span></td>
+                <td class="px-3 py-3.5 text-xs text-ink-500">1 小时前</td>
+                <td class="px-3 py-3.5 text-xs text-ink-500">2026-10-01</td>
+                <td class="px-5 py-3.5 text-right space-x-2">
+                  <button class="btn-ghost text-xs py-1 px-2">禁用</button>
+                  <button class="btn-danger">吊销</button>
+                </td>
+              </tr>
+              <tr>
+                <td class="px-5 py-3.5 font-medium text-ink-800">测试 Key</td>
+                <td class="px-3 py-3.5"><code class="text-xs text-ink-600">hxx_sk_••••••••3b88</code></td>
+                <td class="px-3 py-3.5"><span class="badge badge-slate">全量路由</span></td>
+                <td class="px-3 py-3.5"><span class="badge badge-slate">已禁用</span></td>
+                <td class="px-3 py-3.5 text-xs text-ink-500">3 天前</td>
+                <td class="px-3 py-3.5 text-xs text-ink-500">2026-08-20</td>
+                <td class="px-5 py-3.5 text-right space-x-2">
+                  <button class="btn-ghost text-xs py-1 px-2">启用</button>
+                  <button class="btn-danger">吊销</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="mt-6 p-4 rounded-xl bg-amber-50 border border-amber-100 text-sm text-amber-900">
+          <strong>安全提示：</strong>不要在前端或公开仓库中暴露 API Key。泄露后请立即吊销并重新创建。
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Create modal -->
+  <div id="modal" class="hidden fixed inset-0 modal-bg z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-md">
+      <div class="px-6 py-4 border-b border-ink-100 flex items-center justify-between">
+        <h3 class="font-semibold text-ink-900">创建 API Key</h3>
+        <button onclick="document.getElementById('modal').classList.add('hidden')" class="text-ink-400 hover:text-ink-600 text-xl leading-none">&times;</button>
+      </div>
+      <div class="px-6 py-5 space-y-4">
+        <div>
+          <label class="block text-xs font-medium text-ink-600 mb-1.5">名称</label>
+          <input type="text" placeholder="例如：生产环境" class="w-full border border-ink-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500" />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-ink-600 mb-1.5">权限范围</label>
+          <select class="w-full border border-ink-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/30">
+            <option>全量路由（虚拟模型 + 已授权真实模型）</option>
+            <option>仅虚拟模型</option>
+            <option>只读（用量查询）</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-ink-600 mb-1.5">过期时间（可选）</label>
+          <input type="date" class="w-full border border-ink-200 rounded-lg px-3 py-2 text-sm" />
+        </div>
+      </div>
+      <div class="px-6 py-4 border-t border-ink-100 flex justify-end gap-2">
+        <button onclick="document.getElementById('modal').classList.add('hidden')" class="btn-ghost text-sm">取消</button>
+        <button class="btn-primary text-sm" onclick="alert('原型：创建成功后将展示一次完整 Key（hxx_sk_...）')">创建</button>
+      </div>
+    </div>
+  </div>
+  <script src="../assets/i18n.js"></script>
+</body>
+</html>

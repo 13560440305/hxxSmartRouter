@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>模型池 · 管理后台</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { 600:'#2563eb' },
+            ink: { 50:'#f8fafc',100:'#f1f5f9',200:'#e2e8f0',400:'#94a3b8',500:'#64748b',600:'#475569',700:'#334155',800:'#1e293b',900:'#0f172a' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: Inter, system-ui, sans-serif; }
+    .nav-active { background: #1e293b; color: #fff !important; font-weight: 500; }
+    aside nav a { color: #94a3b8; }
+    aside nav a:hover { color: #fff; background: #1e293b; }
+    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; }
+    .btn-primary { background: #2563eb; color: #fff; border-radius: 8px; padding: 0.45rem 0.9rem; font-size: 13px; font-weight: 500; }
+    .btn-ghost { border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.35rem 0.75rem; color: #334155; font-size: 12px; }
+    .badge { font-size: 11px; padding: 2px 8px; border-radius: 999px; font-weight: 500; background: #f1f5f9; color: #475569; }
+  </style>
+</head>
+<body class="bg-ink-50 text-ink-800 min-h-screen">
+  <div class="flex min-h-screen">
+    <aside class="w-60 bg-ink-900 text-slate-400 flex flex-col shrink-0">
+      <div class="h-14 px-5 flex items-center gap-2 border-b border-ink-800">
+        <div class="w-8 h-8 rounded-lg bg-brand-600 text-white flex items-center justify-center text-sm font-bold">SR</div>
+        <div><div class="text-sm font-semibold text-white">SmartRouter</div><div class="text-[11px] text-ink-400"><span data-i18n="app.adminConsole">管理后台</span></div></div>
+      </div>
+      <nav class="flex-1 py-3 text-sm space-y-0.5 px-2">
+        <a href="index.html" class="flex items-center gap-2 px-3 py-2 rounded-md text-slate-400 hover:bg-ink-800 hover:text-white"><span data-i18n="admin.nav.overview">概览</span></a>
+        <a href="models.html" class="flex items-center gap-2 px-3 py-2 rounded-md text-slate-400 hover:bg-ink-800 hover:text-white"><span data-i18n="admin.nav.models">模型目录</span></a>
+        <a href="pools.html" class="nav-active flex items-center gap-2 px-3 py-2 rounded-md"><span data-i18n="admin.nav.pools">模型池</span></a>
+        <a href="policies.html" class="flex items-center gap-2 px-3 py-2 rounded-md text-slate-400 hover:bg-ink-800 hover:text-white"><span data-i18n="admin.nav.policies">路由策略</span></a>
+        <a href="channels.html" class="flex items-center gap-2 px-3 py-2 rounded-md text-slate-400 hover:bg-ink-800 hover:text-white"><span data-i18n="admin.nav.channels">渠道 (Direct)</span></a>
+        <a href="decisions.html" class="flex items-center gap-2 px-3 py-2 rounded-md text-slate-400 hover:bg-ink-800 hover:text-white"><span data-i18n="admin.nav.decisions">决策审计</span></a>
+        <a href="tenants.html" class="flex items-center gap-2 px-3 py-2 rounded-md text-slate-400 hover:bg-ink-800 hover:text-white"><span data-i18n="admin.nav.tenants">租户与配额</span></a>
+        <a href="system.html" class="flex items-center gap-2 px-3 py-2 rounded-md text-slate-400 hover:bg-ink-800 hover:text-white"><span data-i18n="admin.nav.system">系统状态</span></a>
+      </nav>
+    </aside>
+    <main class="flex-1 overflow-auto">
+      <header class="h-14 bg-white border-b border-ink-200 px-8 flex items-center justify-between sticky top-0">
+        <h1 class="text-base font-semibold" data-i18n="admin.pools.title">模型池</h1>
+        <div class="flex items-center gap-3">
+
+          <label class="inline-flex items-center gap-1.5 text-xs text-ink-500">
+            <span data-i18n="lang.label">语言</span>
+            <select id="lang-select" class="min-w-[9.5rem] border border-ink-200 rounded-lg px-2.5 py-1.5 text-xs text-ink-800 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500/30" aria-label="Language"></select>
+          </label>
+          <button class="btn-primary" data-i18n="admin.pools.add">+ 新建池</button>
+        </div>
+      </header>
+      <div class="p-8 max-w-5xl grid gap-4">
+        <div class="card p-5">
+          <div class="flex justify-between items-start mb-3">
+            <div>
+              <div class="font-semibold text-sm">reasoning_premium <span class="badge ml-1">chat</span></div>
+              <p class="text-xs text-ink-500 mt-1">高质量推理与长文档任务</p>
+            </div>
+            <button class="btn-ghost">编辑成员</button>
+          </div>
+          <div class="flex flex-wrap gap-2 text-xs">
+            <span class="px-2 py-1 bg-ink-50 rounded border border-ink-100">gpt-4o <span class="text-ink-400">P10</span></span>
+            <span class="px-2 py-1 bg-ink-50 rounded border border-ink-100">claude-sonnet <span class="text-ink-400">P20</span></span>
+          </div>
+        </div>
+        <div class="card p-5">
+          <div class="flex justify-between items-start mb-3">
+            <div>
+              <div class="font-semibold text-sm">cheap_general <span class="badge ml-1">chat</span></div>
+              <p class="text-xs text-ink-500 mt-1">低成本通用对话与改写</p>
+            </div>
+            <button class="btn-ghost">编辑成员</button>
+          </div>
+          <div class="flex flex-wrap gap-2 text-xs">
+            <span class="px-2 py-1 bg-ink-50 rounded border border-ink-100">gpt-4o-mini <span class="text-ink-400">P10</span></span>
+            <span class="px-2 py-1 bg-ink-50 rounded border border-ink-100">claude-haiku <span class="text-ink-400">P20</span></span>
+          </div>
+        </div>
+        <div class="card p-5">
+          <div class="flex justify-between items-start mb-3">
+            <div>
+              <div class="font-semibold text-sm">embedding_pool <span class="badge ml-1">embedding</span></div>
+              <p class="text-xs text-ink-500 mt-1">仅 embedding 能力模型</p>
+            </div>
+            <button class="btn-ghost">编辑成员</button>
+          </div>
+          <div class="flex flex-wrap gap-2 text-xs">
+            <span class="px-2 py-1 bg-ink-50 rounded border border-ink-100">text-embedding-3-small</span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="../assets/i18n.js"></script>
+</body>
+</html>
